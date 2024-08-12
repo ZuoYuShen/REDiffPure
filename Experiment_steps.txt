@@ -1,0 +1,25 @@
+Step 1: Download Pretrained DDPM models
+Score_SDE (for CIFAR 10): https://drive.google.com/file/d/16_-Ahc6ImZV5ClUc0vM5Iivf8OJ1VSif/view?usp=sharing
+Guide Diffusion (for ImageNet): https://openaipublic.blob.core.windows.net/diffusion/jul-2021/256x256_diffusion_uncond.pt
+
+Step 2: Download Pretrained Classifier
+ResNet 50 (for CIFAR 10): https://drive.google.com/drive/folders/1SEGilIEAnx9OC1JVhmOynreCF3oog7Fi?usp=sharing
+
+Step 3: Place downloaded models to corresponding folders
+e.g. Place Guide Diffusion model to models/diffusion/Guide_Diffusion
+
+Step 4: Download dataset
+ImageNet validation set (50K images): http://www.image-net.org/challenges/LSVRC/2012/nnoupb/ILSVRC2012_img_val.tar
+
+Step 5: Preprocess dataset (transfer to lmdb)
+After downloaded dataset, cd into the folder, and copy the valprep.sh to the folder.
+Then run 'sh valprep.sh', then, delete the valprep.sh in the folder.
+Then, edit 'folder2lmdb.py', in line 124, change 'folder2lmdb("/data1/ImageNetDataset/Data/CLS-LOC/", name="val")' to the folder where you save the validation set.
+Then run 'python3 folder2lmdb.py'
+
+Step 6: edit dataset path in path.py
+After generating lmdb file, edit the path.py (line 7: imagenet_path = '/data1/ImageNetDataset/Data/CLS-LOC/val.lmdb')
+
+Step 7: run experiment (attack and defense):
+sh imagenet.sh
+
