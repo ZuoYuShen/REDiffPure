@@ -157,6 +157,7 @@ def test(rank, gpu, args):
     for idx, (x, y) in enumerate(testLoader):
         x = x.to(device)
         y = y.to(device)
+        print('x size: ', x.size())
 
         clf.eval()
         diffusion.eval()

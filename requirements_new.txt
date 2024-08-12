@@ -1,0 +1,26 @@
+six
+numpy==1.19.4
+torch==1.7.1
+torchvision==0.8.2
+Pillow==7.2.0
+# xformers==0.0.22
+robustbench @ git+https://github.com/RobustBench/robustbench.git@v1.0
+lmdb
+pyarrow==11.0.0
+PyYAML==5.3.1
+ninja
+nested_dict
+scipy
+torchsde
+foolbox
+torchdiffeq==0.2.1
+timm==0.5.4
+xvfbwrapper==0.2.9
+requests==2.25.0
+tqdm==4.56.1
+tensorboardX==2.0
+seaborn==0.10.1
+pandas==1.2.0
+wheel==0.34.2
+scipy==1.5.2
+pandas==1.2.0

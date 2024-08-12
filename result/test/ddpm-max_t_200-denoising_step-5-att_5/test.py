@@ -76,6 +76,22 @@ def test(rank, gpu, args):
     # Device
     device = torch.device('cuda:{}'.format(gpu))
 
+    # Load dataset
+    assert 512 % args.batch_size == 0
+    testset = load_dataset_by_name(args.dataset, dataset_root, 512)
+    # testsampler = torch.utils.data.distributed.DistributedSampler(testset,
+    #                                                               num_replicas=args.world_size,
+    #                                                               rank=rank)
+    testLoader = torch.utils.data.DataLoader(testset,
+                                             batch_size=args.batch_size,
+                                             num_workers=0,
+                                             pin_memory=True,
+                                             # sampler=testsampler,
+                                             drop_last=False)
+
+    # Load models
+    clf, diffusion = load_models(args, model_src, device)
+
     # Process diffusion hyperparameters
     def_max_timesteps, def_diffusion_steps = get_diffusion_params(
         args.def_max_timesteps, args.def_num_denoising_steps)
@@ -89,23 +105,6 @@ def test(rank, gpu, args):
     print('att_max_timesteps: ', att_max_timesteps)
     print('att_diffusion_steps: ', att_diffusion_steps)
     print('att_sampling_method: ', args.att_sampling_method)
-
-    # Load dataset
-    assert 512 % args.batch_size == 0
-    testset = load_dataset_by_name(args.dataset, dataset_root, 512)
-    testsampler = torch.utils.data.distributed.DistributedSampler(testset,
-                                                                  num_replicas=args.world_size,
-                                                                  rank=rank)
-    testLoader = torch.utils.data.DataLoader(testset,
-                                             batch_size=args.batch_size,
-                                             num_workers=0,
-                                             pin_memory=True,
-                                             sampler=testsampler,
-                                             drop_last=False)
-
-
-    # Load models
-    clf, diffusion = load_models(args, model_src, device)
 
     # Set diffusion process for attack and defense
     attack_forward = PurificationForward(
@@ -312,4 +311,6 @@ if __name__ == '__main__':
         for p in processes:
             p.join()
     else:
-        init_processes(0, size, test, args)
+        # init_processes(0, size, test, args)
+        print('world size: ', args.world_size)
+        init_processes_cpu(0, size, test, args)
